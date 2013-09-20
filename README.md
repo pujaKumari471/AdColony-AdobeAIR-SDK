@@ -1,4 +1,4 @@
-AdColony-AdobeAIR-SDK
+AdColony Native Extension for Adobe AIR for iOS and Android
 =====================
 
-AdColony Native Extension for Adobe AIR - first release coming soon.
+Our first release is coming soon.
