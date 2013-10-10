@@ -104,13 +104,13 @@ function scaleUI():void
     var stage:Stage = video_button.stage;
     stage.align = StageAlign.TOP_LEFT;
     var guiSize:Rectangle = new Rectangle(0,0,480,800);
-
+	var deviceSize:Rectangle;
 	  //If the device reports high DPI, scale by stage size instead of screen size.
 	if (Capabilities.screenDPI >= 400) {
-      var deviceSize:Rectangle = new Rectangle(0,0,stage.stageWidth, stage.stageHeight);
+      deviceSize = new Rectangle(0,0,stage.stageWidth, stage.stageHeight);
     }
     else {
-      var deviceSize:Rectangle = new Rectangle(0,0,stage.fullScreenWidth, stage.fullScreenHeight);
+      deviceSize = new Rectangle(0,0,stage.fullScreenWidth, stage.fullScreenHeight);
     }
 
     var appSize:Rectangle = guiSize.clone();

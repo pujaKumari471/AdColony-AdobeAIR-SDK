@@ -56,7 +56,7 @@
               }
             }
 
-            function resetV4VCCounter():void
+            public function resetV4VCCounter():void
             {
               cur_v4vc_name = AdColony.getV4VCName(cur_v4vc_zone);
               var ba_name:ByteArray = new ByteArray();
