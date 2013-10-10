@@ -24,7 +24,7 @@ Contains:
 
 Getting Started with AdColony:
 ----------------------------------
-Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki).
+Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
 
 Sample Applications:
