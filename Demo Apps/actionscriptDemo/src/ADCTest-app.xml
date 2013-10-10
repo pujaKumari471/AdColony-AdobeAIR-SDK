@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<application xmlns="http://ns.adobe.com/air/application/3.6">
+    <id>AS3Test</id>
+    <versionNumber>1.0.2</versionNumber>
+    <filename>AS3Test</filename>
+    <description></description>
+    <!-- To localize the description, use the following format for the description element.
+	<description>
+		<text xml:lang="en">English App description goes here</text>
+		<text xml:lang="fr">French App description goes here</text>
+		<text xml:lang="ja">Japanese App description goes here</text>
+	</description>
+	-->
+    <name>AS3Test</name>
+    <!-- To localize the name, use the following format for the name element.
+	<name>
+		<text xml:lang="en">English App name goes here</text>
+		<text xml:lang="fr">French App name goes here</text>
+		<text xml:lang="ja">Japanese App name goes here</text>
+	</name>
+	-->
+    <copyright></copyright>
+    <initialWindow>
+        <content>ADCTest.swf</content>
+        <systemChrome>standard</systemChrome>
+        <transparent>false</transparent>
+        <visible>true</visible>
+        <fullScreen>false</fullScreen>
+        <autoOrients>false</autoOrients>
+        <aspectRatio>portrait</aspectRatio>
+        <renderMode>cpu</renderMode>
+    </initialWindow>
+    <customUpdateUI>false</customUpdateUI>
+    <allowBrowserInvocation>false</allowBrowserInvocation>
+    <icon>
+        <image72x72>res/icons/iconBig.png</image72x72>
+        <image36x36>res/icons/iconSmall.png</image36x36>
+        <image48x48>res/icons/iconMed.png</image48x48>
+    </icon>
+    <versionLabel></versionLabel>
+    <android>
+        <manifestAdditions><![CDATA[
+          <manifest>
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <application android:hardwareAccelerated="true">
+              <activity android:launchMode="singleTop">
+                <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                </intent-filter>
+              </activity>
+              <activity android:name="com.jirbo.adcolony.AdColonyOverlay" android:windowSoftInputMode="adjustNothing" android:configChanges="keyboardHidden|orientation|screenSize" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+              <activity android:name="com.jirbo.adcolony.AdColonyFullscreen" android:configChanges="keyboardHidden|orientation|screenSize" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+              <activity android:name="com.jirbo.adcolony.AdColonyBrowser" android:configChanges="keyboardHidden|orientation|screenSize" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+          </application>
+          </manifest>
+        ]]></manifestAdditions>
+    </android>
+    <iPhone>
+        <requestedDisplayResolution>high</requestedDisplayResolution>
+        <InfoAdditions><![CDATA[
+          <key>UIDeviceFamily</key>
+          <array>
+              <string>1</string>
+              <string>2</string>
+          </array>
+      <key>UILaunchImageFile</key>
+      <string>Default-568h@2x.png</string>
+      <key>MinimumOSVersion</key>
+      <string>5.1</string>
+        ]]></InfoAdditions>
+    </iPhone>
+    <extensions>
+        <extensionID>com.jirbo.airadc.AirAdColony</extensionID>
+    </extensions>
+</application>
