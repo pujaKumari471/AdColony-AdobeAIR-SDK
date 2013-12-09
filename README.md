@@ -1,9 +1,9 @@
 AdColony AIR Native Extension
 ==================================
-Modified: 2013/10/10  
-Android SDK Version: 2.0.3  
-iOS SDK Version: 2.2.2   
-Native Extension Version: 1.0.3
+Modified: 2013/12/09
+Android SDK Version: 2.0.4
+iOS SDK Version: 2.2.4
+Native Extension Version: 1.0.4
 
 
 To Download:
