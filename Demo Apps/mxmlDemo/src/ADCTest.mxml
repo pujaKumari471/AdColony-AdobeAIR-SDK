@@ -77,9 +77,18 @@
                 {
                   trace("Ad start");
                 }
-                else if (event.code == "AdFinished")
+                else if (event.code.indexOf("AdFinished") >= 0)
                 {
-                  trace("Ad stop");
+                  //AdFinished Event is delimited by |
+                  //Format is AdFinished|success
+                  var adFinish_arr:Array = event.code.split('|');
+                  //if success is true
+                  if (adFinish_arr[1] == "true") {
+                    trace("AdFinished: Ad Play Success");
+                  }
+                  else {
+                    trace("AdFinished: Ad Play Fail");
+                  }
                   updateButtonText(1);
                 }
                 else if (event.code.indexOf("V4VCReward") >= 0)
@@ -154,25 +163,11 @@
             }
 
             public function playVideo(event:Event):void {
-              if(!AdColony.isVideoAvailable())
-              {
-                Alert.show("No Ad Fill");
-              }
-              else
-              {
                 AdColony.showVideoAd();
-              }
             }
 
             public function playV4VC(event:Event):void {
-              if (!AdColony.isV4VCAvailable())
-              {
-                Alert.show("No Ad Fill");
-              }
-              else
-              {
                 AdColony.offerV4VC( true);
-              }
             }
         ]]>
     </fx:Script>

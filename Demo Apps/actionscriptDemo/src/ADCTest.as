@@ -78,7 +78,7 @@ public static const IPAD_2:String = "iPad2"; // wifi:2,1 gsm:2,2 cdma:2,3
 public static const IPAD_3:String = "iPad3"; // (guessing)
 public static const IPAD_4PLUS:String = "iPad";
 public static const UNKNOWN:String = "unknown";
-		
+
 private static const IOS_DEVICES:Array = [IPHONE_1G, IPHONE_3G, IPHONE_3GS,
     IPHONE_4, IPHONE_4S, IPHONE_5PLUS, IPAD_1, IPAD_2, IPAD_3, IPAD_4PLUS,
     TOUCH_1G, TOUCH_2G, TOUCH_3G, TOUCH_4G, TOUCH_5PLUS];
@@ -90,7 +90,7 @@ public static function getDevice():String {
     }
 
     // ordered from specific (iPhone1,1) to general (iPhone)
-    for each (var device:String in IOS_DEVICES) {	
+    for each (var device:String in IOS_DEVICES) {
         if (info[3].indexOf(device) != -1) {
             return device;
         }
@@ -228,9 +228,18 @@ function scaleUI():void
         {
           trace("Ad start");
         }
-        else if (event.code == "AdFinished")
+        else if (event.code.indexOf("AdFinished") >= 0)
         {
-          trace("Ad stop");
+			//AdFinished Event is delimited by |
+			//Format is AdFinished|success
+			var adFinish_arr:Array = event.code.split('|');
+			//if success is true
+			if (adFinish_arr[1] == "true") {
+				trace("AdFinished: Ad Play Success");
+			}
+			else {
+				trace("AdFinished: Ad Play Fail");
+			}
 			updateButtonText(1);
         }
         else if (event.code.indexOf("V4VCReward") >= 0)
