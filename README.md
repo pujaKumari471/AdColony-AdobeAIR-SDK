@@ -26,6 +26,12 @@ Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
+Change Log (2013/12/09):
+----------------------------------
+* iOS SDK 2.2.4 integrated
+* Android SDK 2.0.4 integrated
+* Public class methods `StatusForZone` and `CancelVideo` exposed.
+* The `AdFinished` event code now includes a boolean. The change requires a small update to existing integrations. For more information, consult the `Updating from Earlier Versions` section of the AIR SDK documentation.
 
 Sample Applications:
 ----------------------------------
