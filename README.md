@@ -26,6 +26,10 @@ Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
+Change Log (2014/04/16):
+----------------------------------
+* Fix an issue that cause statusForZone to return "null".
+
 Change Log (2013/12/09):
 ----------------------------------
 * iOS SDK 2.2.4 integrated
