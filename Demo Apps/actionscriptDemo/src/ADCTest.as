@@ -53,7 +53,6 @@
        cur_v4vc_zone = android_v4vc_zone;
      }
      AdColony.configure("1.0",cur_app_id,cur_video_zone,cur_v4vc_zone);
-     updateButtonText(-1);
    }
    else
    {
@@ -169,110 +168,95 @@ function scaleUI():void
       EncryptedLocalStore.setItem("v4vc_amount", ba_amount);
     }
 
-    public function updateButtonText(numRetries:int):void
-    {
-      var tryAgain:Boolean = false;
-      if (AdColony.isVideoAvailable(cur_video_zone))
-      {
-       video_button_label.text = "Play Video - READY";
-       video_button_label.autoSize = TextFieldAutoSize.CENTER;
-     }
-     else
-     {
-       video_button_label.text = "Play Video - NOT READY";
-       video_button_label.autoSize = TextFieldAutoSize.CENTER;
-       tryAgain = true;
-     }
-     if (AdColony.isV4VCAvailable(cur_v4vc_zone))
-     {
-       v4vc_button_label.text = "Play V4VC - READY";
-       v4vc_button_label.autoSize = TextFieldAutoSize.CENTER;
-       var ba_v4vc_name:ByteArray = EncryptedLocalStore.getItem("v4vc_name");
-        //if there is no v4vc name stored
-        if (!ba_v4vc_name)
-        {
-          resetV4VCCounter();
-        }
-        else
-        {
-          cur_v4vc_name = ba_v4vc_name.readUTF();
-          //if the stored v4vc name is different from the current name
-          if (cur_v4vc_name != AdColony.getV4VCName(cur_v4vc_zone))
-          {
-            resetV4VCCounter();
-          }
-          var ba_v4vc_amount:ByteArray = EncryptedLocalStore.getItem("v4vc_amount");
-          cur_v4vc_amount = ba_v4vc_amount.readInt();
-        }
-        v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
-      }
-      else
-      {
-       v4vc_button_label.text = "Play V4VC - NOT READY";
-       v4vc_button_label.autoSize = TextFieldAutoSize.CENTER;
-       tryAgain = true;
-     }
-      //if a zone wasn't ready, try again to update button text when it is ready for video playing.
-      if (tryAgain && ( numRetries <= -1 || numRetries > 0))
-      {
-       setTimeout(updateButtonText,500, numRetries - 1);
-     }
-   }
+	public function updateButtonText(success:Boolean,updated_zone:String):void
+	{
+	  if (updated_zone == cur_video_zone) {
+		if (success) {
+		  video_button_label.text = "Play Video - Ready";
+		}
+		else {
+		  video_button_label.text = "Play Video - NOT READY";
+		}
+	  }
+	  else if (updated_zone == cur_v4vc_zone) {
+		if (success) {
+		  v4vc_button_label.text = "Play V4VC - Ready";
+		var ba_v4vc_name:ByteArray = EncryptedLocalStore.getItem("v4vc_name");
+		if (!ba_v4vc_name)
+		{
+		  resetV4VCCounter();
+		}
+		else
+		{
+		  cur_v4vc_name = ba_v4vc_name.readUTF();
+		  if (cur_v4vc_name != AdColony.getV4VCName(cur_v4vc_zone))
+		  {
+			resetV4VCCounter();
+		  }
+		  var ba_v4vc_amount:ByteArray = EncryptedLocalStore.getItem("v4vc_amount");
+		  cur_v4vc_amount = ba_v4vc_amount.readInt();
+		}
+		v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
+		}
+		else {
+		  v4vc_button_label.text = "Play V4VC - NOT READY";
+		}
+	  }
+	}
 
     //AdColony Event Handler
-    public function handleAdColonyEvent(event:StatusEvent):void {
-      //if the StatusEvent is from AdColony
-      if(event.level == "AdColony")
-      {
-        if(event.code == "AdStarted")
-        {
-          trace("Ad start");
-        }
-        else if (event.code.indexOf("AdFinished") >= 0)
-        {
-			//AdFinished Event is delimited by |
-			//Format is AdFinished|success
-			var adFinish_arr:Array = event.code.split('|');
-			//if success is true
-			if (adFinish_arr[1] == "true") {
-				trace("AdFinished: Ad Play Success");
+	public function handleAdColonyEvent(event:StatusEvent):void {
+	  if(event.level == "AdColony")
+	  {
+		if(event.code == "AdStarted")
+		{
+		  trace("Ad start");
+		}
+		else if (event.code.indexOf("AdFinished") >= 0)
+		{
+		  //AdFinished Event is delimited by |
+		  //Format is AdFinished|success
+		  var adFinish_arr:Array = event.code.split('|');
+		  //if success is true
+		  if (adFinish_arr[1] == "true") {
+			trace("AdFinished: Ad Play Success");
+		  }
+		  else {
+			trace("AdFinished: Ad Play Fail");
+		  }
+		  // updateButtonText(1);
+		}
+		else if (event.code.indexOf("V4VCReward") >= 0)
+		{
+		  //V4VCReward Event is delimited by |
+		  //Order is V4VCReward|success|amount|name
+		  var v4vc_arr:Array = event.code.split("|");
+		  if(v4vc_arr[1] == "true")
+		  {
+			trace("V4VC Success");
+			if (v4vc_arr[3] != cur_v4vc_name)
+			{
+			  resetV4VCCounter();
 			}
-			else {
-				trace("AdFinished: Ad Play Fail");
-			}
-			updateButtonText(1);
-        }
-        else if (event.code.indexOf("V4VCReward") >= 0)
-        {
-          //V4VCReward Event is delimited by |
-          //Order is V4VCReward|success|amount|name
-          var v4vc_arr:Array = event.code.split("|");
-          //if success is true
-          if(v4vc_arr[1] == "true")
-          {
-            trace("V4VC Success");
+			cur_v4vc_amount += int(v4vc_arr[2]);
+			var ba_v4vc_amount:ByteArray = new ByteArray();
+			ba_v4vc_amount.writeInt(cur_v4vc_amount);
+			EncryptedLocalStore.setItem("v4vc_amount", ba_v4vc_amount);
+			v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
+		  }
+		  else
+		  {
+			trace("V4VC Fail");
+		  }
+		}
+		else if (event.code.indexOf("AdAvailabilityChange") >= 0) {
+		  //AdAvailabilityChange Event is delimited by |
+		  //Order is AdAvailabilityChange|available|zone
+		  var args_arr:Array = event.code.split("|");
+		  updateButtonText(args_arr[1],args_arr[2]);
+		}
+	  }
+	}
 
-            //if the v4vc reward name is different from
-            // the current v4vc name
-            if (v4vc_arr[3] != cur_v4vc_name)
-            {
-              resetV4VCCounter();
-            }
-
-            //add the reward amount the the current total and save it
-            cur_v4vc_amount += int(v4vc_arr[2]);
-            var ba_v4vc_amount:ByteArray = new ByteArray();
-            ba_v4vc_amount.writeInt(cur_v4vc_amount);
-            EncryptedLocalStore.setItem("v4vc_amount", ba_v4vc_amount);
-
-            v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
-          }
-          else
-          {
-            trace("V4VC Fail");
-          }
-        }
-      }
-    }
   }
 }

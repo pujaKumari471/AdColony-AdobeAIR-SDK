@@ -48,7 +48,7 @@
                 AdColony.adcContext.addEventListener(StatusEvent.STATUS, handleAdColonyEvent);
                 //Configure AdColony to use the correct app id and video zones
                 AdColony.configure("1.0",cur_app_id, cur_video_zone, cur_v4vc_zone);
-                updateButtonText(-1);
+                // updateButtonText(-1);
               }
               else
               {
@@ -70,7 +70,6 @@
 
             //AdColony Event Handler
             public function handleAdColonyEvent(event:StatusEvent):void {
-              trace(event.code);
               if(event.level == "AdColony")
               {
                 if(event.code == "AdStarted")
@@ -89,7 +88,7 @@
                   else {
                     trace("AdFinished: Ad Play Fail");
                   }
-                  updateButtonText(1);
+                  // updateButtonText(1);
                 }
                 else if (event.code.indexOf("V4VCReward") >= 0)
                 {
@@ -112,28 +111,30 @@
                   else
                   {
                     trace("V4VC Fail");
-                    Alert.show("V4VC FAILED!");
                   }
+                }
+                else if (event.code.indexOf("AdAvailabilityChange") >= 0) {
+                  //AdAvailabilityChange Event is delimited by |
+                  //Order is AdAvailabilityChange|available|zone
+                  var args_arr:Array = event.code.split("|");
+                  updateButtonText(args_arr[1],args_arr[2]);
                 }
               }
             }
 
-            public function updateButtonText(numRetries:int):void
+            public function updateButtonText(success:Boolean,updated_zone:String):void
             {
-              var tryAgain:Boolean = false;
-              if (AdColony.isVideoAvailable(cur_video_zone))
-              {
-                videoButton.label = "Play Video - READY";
+              if (updated_zone == cur_video_zone) {
+                if (success) {
+                  videoButton.label = "Play Video - Ready";
+                }
+                else {
+                  videoButton.label = "Play Video - NOT READY";
+                }
               }
-              else
-              {
-                videoButton.label = "Play Video - NOT READY";
-                tryAgain = true;
-              }
-              if (AdColony.isV4VCAvailable(cur_v4vc_zone))
-              {
-                v4vcButton.label = "Play V4VC - READY";
-
+              else if (updated_zone == cur_v4vc_zone) {
+                if (success) {
+                  v4vcButton.label = "Play V4VC - Ready";
                 var ba_v4vc_name:ByteArray = EncryptedLocalStore.getItem("v4vc_name");
                 if (!ba_v4vc_name)
                 {
@@ -150,15 +151,10 @@
                   cur_v4vc_amount = ba_v4vc_amount.readInt();
                 }
                 v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
-              }
-              else
-              {
-                v4vcButton.label = "Play V4VC - NOT READY";
-                tryAgain = true;
-              }
-              if (tryAgain && (numRetries <= -1 || numRetries > 0))
-              {
-                setTimeout(updateButtonText,500, numRetries - 1);
+                }
+                else {
+                  v4vcButton.label = "Play V4VC - NOT READY";
+                }
               }
             }
 
@@ -167,7 +163,7 @@
             }
 
             public function playV4VC(event:Event):void {
-                AdColony.offerV4VC( true);
+              AdColony.offerV4VC(true, cur_v4vc_zone);
             }
         ]]>
     </fx:Script>
@@ -176,10 +172,10 @@
         <s:VGroup id="mainGroup" horizontalAlign="center" width="100%" >
         <s:Image id="adcLogo" source="@Embed('res/img/adc.png')" horizontalAlign="center" scaleMode="letterbox" fillMode="scale"/>
         <s:VGroup >
-        <s:Button skinClass="buttonSkin" id="videoButton"  label="Play Video" click="playVideo(event);"/>
+        <s:Button skinClass="buttonSkin" id="videoButton"  label="Play Video - NOT READY" click="playVideo(event);"/>
         </s:VGroup>
         <s:VGroup >
-        <s:Button skinClass="buttonSkin" id="v4vcButton"  label="Play V4VC" click="playV4VC(event);"/>
+        <s:Button skinClass="buttonSkin" id="v4vcButton"  label="Play V4VC - NOT READY" click="playV4VC(event);"/>
         </s:VGroup>
         <s:Label id="v4vc_counter_label" color="0xFFFFFF" text="V4VC Info: Loading..."/>
         </s:VGroup>
