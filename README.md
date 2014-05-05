@@ -1,9 +1,9 @@
 AdColony AIR Native Extension
 ==================================
-Modified: 2014/04/25    
+Modified: 2014/05/05    
 Android SDK Version: 2.0.4    
 iOS SDK Version: 2.2.4    
-Native Extension Version: 1.0.7    
+Native Extension Version: 1.0.8    
 
 
 To Download:
@@ -26,9 +26,13 @@ Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
+Change Log (2014/05/05):
+----------------------------------
+* Update demo apps to use the AdAvailabilityChange event. Include default platform in the ANE.
+
 Change Log (2014/04/25):
 ----------------------------------
-* Fix issue where getV4VCAmount could cause a crash
+* Fix issue where getV4VCAmount could cause a crash.
 
 Change Log (2014/04/21):
 ----------------------------------
