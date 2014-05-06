@@ -48,7 +48,6 @@
                 AdColony.adcContext.addEventListener(StatusEvent.STATUS, handleAdColonyEvent);
                 //Configure AdColony to use the correct app id and video zones
                 AdColony.configure("1.0",cur_app_id, cur_video_zone, cur_v4vc_zone);
-                // updateButtonText(-1);
               }
               else
               {
@@ -88,7 +87,6 @@
                   else {
                     trace("AdFinished: Ad Play Fail");
                   }
-                  // updateButtonText(1);
                 }
                 else if (event.code.indexOf("V4VCReward") >= 0)
                 {
