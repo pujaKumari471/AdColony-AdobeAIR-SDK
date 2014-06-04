@@ -26,7 +26,7 @@ Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
-Change Log (2014/05/27):
+Change Log (2014/06/04):
 ----------------------------------
 * Update Android SDK to version 2.0.7. Fix default platform. Fix getCustomID for Android
 
