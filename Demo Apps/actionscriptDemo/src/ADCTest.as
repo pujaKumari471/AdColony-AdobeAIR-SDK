@@ -105,9 +105,6 @@ function scaleUI():void
 	stage.scaleMode = StageScaleMode.NO_SCALE;
     stage.align = StageAlign.TOP_LEFT;
 	var dpi:Number = Capabilities.screenDPI;
-	//if (AdColony.is_iOS && (IOS_DEVICES.indexOf(getDevice()) >= 0)) {
-		//dpi /= 2;
-	//}
 	var serverString:String = unescape(Capabilities.serverString);
 	var reportedDpi:Number = Number(serverString.split("&DP=", 2)[1]);
 	var scale = 1;
