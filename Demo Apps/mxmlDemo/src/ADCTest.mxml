@@ -21,7 +21,6 @@
             private var ios_video_zone:String = "vzf8fb4670a60e4a139d01b5";
             private var ios_v4vc_zone:String = "vzf8e4e97704c4445c87504e";
 
-
             private var android_app_id:String = "app185a7e71e1714831a49ec7";
             private var android_video_zone:String = "vz06e8c32a037749699e7050";
             private var android_v4vc_zone:String = "vz1fd5a8b2bf6841a0a4b826";
@@ -48,6 +47,7 @@
                 AdColony.adcContext.addEventListener(StatusEvent.STATUS, handleAdColonyEvent);
                 //Configure AdColony to use the correct app id and video zones
                 AdColony.configure("1.0",cur_app_id, cur_video_zone, cur_v4vc_zone);
+                AdColony.setCustomID('feh');
               }
               else
               {
@@ -115,7 +115,9 @@
                   //AdAvailabilityChange Event is delimited by |
                   //Order is AdAvailabilityChange|available|zone
                   var args_arr:Array = event.code.split("|");
-                  updateButtonText(args_arr[1],args_arr[2]);
+                  var outcome:Boolean = false;
+                  if (args_arr[1] == 'true') outcome = true;
+                  updateButtonText(outcome,args_arr[2]);
                 }
               }
             }
@@ -161,14 +163,18 @@
             }
 
             public function playV4VC(event:Event):void {
-              AdColony.offerV4VC(true, cur_v4vc_zone);
+                AdColony.offerV4VC( true);
             }
         ]]>
     </fx:Script>
 
     <!-- Application Layout -->
         <s:VGroup id="mainGroup" horizontalAlign="center" width="100%" >
+        <mx:Spacer height="15%" />
+        <mx:Spacer height="15%" />
         <s:Image id="adcLogo" source="@Embed('res/img/adc.png')" horizontalAlign="center" scaleMode="letterbox" fillMode="scale"/>
+        <mx:Spacer height="15%" />
+        <s:Label id="version_label" color="0xFFFFFF" text="ANE Version: 2.0.7.0"/>
         <s:VGroup >
         <s:Button skinClass="buttonSkin" id="videoButton"  label="Play Video - NOT READY" click="playVideo(event);"/>
         </s:VGroup>

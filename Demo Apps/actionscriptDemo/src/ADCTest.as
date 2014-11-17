@@ -1,4 +1,5 @@
-﻿package  {
+﻿
+package  {
 
   import flash.utils.ByteArray;
   import flash.data.EncryptedLocalStore;
@@ -26,13 +27,13 @@
     private var cur_v4vc_name:String;
     private var cur_v4vc_amount:int;
 
-    private const ios_app_id:String = "appbdee68ae27024084bb334a";
-    private var ios_video_zone:String = "vzf8fb4670a60e4a139d01b5";
-    private var ios_v4vc_zone:String = "vzf8e4e97704c4445c87504e";
+	 private const ios_app_id:String = "appbdee68ae27024084bb334a";
+	 private var ios_video_zone:String = "vzf8fb4670a60e4a139d01b5";
+	 private var ios_v4vc_zone:String = "vzf8e4e97704c4445c87504e";
 
-    private var android_app_id:String = "app185a7e71e1714831a49ec7";
-    private var android_video_zone:String = "vz06e8c32a037749699e7050";
-    private var android_v4vc_zone:String = "vz1fd5a8b2bf6841a0a4b826";
+	 private var android_app_id:String = "app185a7e71e1714831a49ec7";
+	 private var android_video_zone:String = "vz06e8c32a037749699e7050";
+	 private var android_v4vc_zone:String = "vz1fd5a8b2bf6841a0a4b826";
 
     public function ADCTest() {
      AdColony = new AirAdColony();
@@ -101,55 +102,50 @@ function scaleUI():void
 {
 	  // get reference t stage
     var stage:Stage = video_button.stage;
+	stage.scaleMode = StageScaleMode.NO_SCALE;
     stage.align = StageAlign.TOP_LEFT;
-    var guiSize:Rectangle = new Rectangle(0,0,480,800);
-	var deviceSize:Rectangle;
-	  //If the device reports high DPI, scale by stage size instead of screen size.
-	if (Capabilities.screenDPI >= 400) {
-      deviceSize = new Rectangle(0,0,stage.stageWidth, stage.stageHeight);
-    }
-    else {
-      deviceSize = new Rectangle(0,0,stage.fullScreenWidth, stage.fullScreenHeight);
-    }
+	var dpi:Number = Capabilities.screenDPI;
+	//if (AdColony.is_iOS && (IOS_DEVICES.indexOf(getDevice()) >= 0)) {
+		//dpi /= 2;
+	//}
+	var serverString:String = unescape(Capabilities.serverString);
+	var reportedDpi:Number = Number(serverString.split("&DP=", 2)[1]);
+	var scale = 1;
 
-    var appSize:Rectangle = guiSize.clone();
-    var scale:Number = 1;
+	var guiSize:Rectangle = new Rectangle(0,0,480,800);
+    var appSize:Rectangle = new Rectangle(0,0,stage.fullScreenWidth,stage.fullScreenHeight);
+	var deviceSize:Rectangle = appSize.clone();
 
-	  //Accommodate for some strange scaling on some iOS devices
-	  if (AdColony.is_iOS && (getDevice() == IPHONE_4 || getDevice() == IPHONE_4S)) {
-      deviceSize.width *= 1.5;
-      deviceSize.height *= 1.5;
-    }
-	else if (AdColony.is_iOS && (getDevice() == IPAD_4PLUS || getDevice() == IPAD_3)) {
-		deviceSize.width *= 0.5;
-		deviceSize.height *= 0.5;
+	if ((deviceSize.width / deviceSize.height) > (guiSize.width / guiSize.height)) {
+		//device is wider than GUI's aspect ratio, height determines scale
+		scale = appSize.height / guiSize.height;
+		appSize.width = deviceSize.width / scale;
 	}
-	  //if the device's aspect ratio is wider than the gui's aspect ratio
-	  if ((deviceSize.width/deviceSize.height) > (guiSize.width/guiSize.height)) {
-      scale = deviceSize.height / guiSize.height;
-      appSize.width = deviceSize.width / scale;
-    }
-    else {
-      scale = deviceSize.width / guiSize.width;
-      appSize.height = deviceSize.height / scale;
-    }
+	else {
+		//device is taller than GUI's aspect ratio, width determines scale
+		scale = deviceSize.width / guiSize.width;
+		appSize.height = deviceSize.height / scale;
+	}
+
 
 	  //set scaleX and scaleY of all gui elements to be the calculated scale
-    v4vc_counter_label.scaleX = v4vc_counter_label.scaleY = video_button_label.scaleX = video_button_label.scaleY = v4vc_button_label.scaleX = v4vc_button_label.scaleY = adc_logo.scaleX = adc_logo.scaleY = video_button.scaleX = video_button.scaleY = v4vc_button.scaleX = v4vc_button.scaleY = scale;
+    version_label.scaleX = version_label.scaleY = v4vc_counter_label.scaleX = v4vc_counter_label.scaleY = video_button_label.scaleX = video_button_label.scaleY = v4vc_button_label.scaleX = v4vc_button_label.scaleY = adc_logo.scaleX = adc_logo.scaleY = video_button.scaleX = video_button.scaleY = v4vc_button.scaleX = v4vc_button.scaleY = scale;
 
 	  //center all gui elements and ensure reasonable spacing between each element.
-    v4vc_counter_label.x = (appSize.width / 2) - (v4vc_counter_label.width / 2);
-    video_button_label.x = (appSize.width / 2) - (video_button_label.width / 2);
-    v4vc_button_label.x = (appSize.width / 2) - (v4vc_button_label.width / 2);
-    video_button.x = (appSize.width / 2) - (video_button.width / 2);
-    video_button.y = adc_logo.y + adc_logo.height + 20;
-    v4vc_button.x = (appSize.width / 2) - (v4vc_button.width / 2);
+    adc_logo.x = (deviceSize.width / 2) - (adc_logo.width / 2);
+    version_label.x = (deviceSize.width / 2) - (version_label.width / 2);
+    version_label.y = adc_logo.y + adc_logo.height;
+    video_button.x = (deviceSize.width / 2) - (video_button.width / 2);
+    video_button.y = version_label.y + version_label.height + 20;
+    v4vc_button.x = (deviceSize.width / 2) - (v4vc_button.width / 2);
     v4vc_button.y = video_button.y + video_button.height + 20;
-    adc_logo.x = (appSize.width / 2) - (adc_logo.width / 2);
+    video_button_label.x = (deviceSize.width / 2) - (video_button_label.width / 2);
     video_button_label.autoSize = TextFieldAutoSize.CENTER;
     video_button_label.y = video_button.y + ((video_button.height / 2) - (video_button_label.height / 2));
+    v4vc_button_label.x = (deviceSize.width / 2) - (v4vc_button_label.width / 2);
     v4vc_button_label.autoSize = TextFieldAutoSize.CENTER;
     v4vc_button_label.y = v4vc_button.y + ((v4vc_button.height / 2) - (v4vc_button_label.height / 2));
+    v4vc_counter_label.x = (deviceSize.width / 2) - (v4vc_counter_label.width / 2);
     v4vc_counter_label.autoSize = TextFieldAutoSize.CENTER;
     v4vc_counter_label.y = v4vc_button.y + v4vc_button.height + 10;
   }
@@ -253,7 +249,9 @@ function scaleUI():void
 		  //AdAvailabilityChange Event is delimited by |
 		  //Order is AdAvailabilityChange|available|zone
 		  var args_arr:Array = event.code.split("|");
-		  updateButtonText(args_arr[1],args_arr[2]);
+		  var outcome:Boolean = false;
+          if (args_arr[1] == 'true') outcome = true;
+		  updateButtonText(outcome,args_arr[2]);
 		}
 	  }
 	}
