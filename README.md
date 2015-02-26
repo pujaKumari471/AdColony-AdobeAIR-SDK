@@ -1,9 +1,9 @@
 AdColony AIR Native Extension
 ==================================
-Modified: 2014/11/17    
-Android SDK Version: 2.1.3    
-iOS SDK Version: 2.4.13    
-Native Extension Version: 2.0.7   
+Modified: 2015/02/26    
+Android SDK Version: 2.2.1    
+iOS SDK Version: 2.5.0    
+Native Extension Version: 2.0.8   
 
 
 To Download:
@@ -25,6 +25,10 @@ Contains:
 Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
+
+Change Log (2015/02/26):
+----------------------------------
+* Update Android SDK to 2.2.1. Update iOS SDK to 2.5.0. Add 64 bit iOS support. Add Android x86 support.
 
 Change Log (2014/11/17):
 ----------------------------------
