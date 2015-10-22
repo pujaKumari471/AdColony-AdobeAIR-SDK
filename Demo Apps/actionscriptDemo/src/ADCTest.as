@@ -4,7 +4,7 @@ package  {
   import flash.utils.ByteArray;
   import flash.data.EncryptedLocalStore;
   import flash.display.MovieClip;
-  import com.jirbo.airadc.AirAdColony;
+  import com.jirbo.airadc.*;
   import flash.events.StatusEvent;
   import flash.events.TouchEvent;
   import flash.ui.Multitouch;
@@ -40,7 +40,10 @@ package  {
      scaleUI();
      if (AdColony.isSupported())
      {
-      AdColony.adcContext.addEventListener(StatusEvent.STATUS, handleAdColonyEvent);
+        AdColony.addEventListener(AdColonyAdStartedEvent.EVENT_TYPE, handleAdStart);
+        AdColony.addEventListener(AdColonyAdFinishedEvent.EVENT_TYPE, handleAdFinish);
+        AdColony.addEventListener(AdColonyV4VCRewardEvent.EVENT_TYPE, handleV4VCEvent);
+        AdColony.addEventListener(AdColonyAdAvailabilityChangeEvent.EVENT_TYPE, handleAdAvailabilityChange);
       if (AdColony.is_iOS)
       {
        cur_app_id = ios_app_id;
@@ -197,61 +200,42 @@ function scaleUI():void
 	  }
 	}
 
-    //AdColony Event Handler
-	public function handleAdColonyEvent(event:StatusEvent):void {
-	  if(event.level == "AdColony")
-	  {
-		if(event.code == "AdStarted")
-		{
-		  trace("Ad start");
-		}
-		else if (event.code.indexOf("AdFinished") >= 0)
-		{
-		  //AdFinished Event is delimited by |
-		  //Format is AdFinished|success
-		  var adFinish_arr:Array = event.code.split('|');
-		  //if success is true
-		  if (adFinish_arr[1] == "true") {
-			trace("AdFinished: Ad Play Success");
-		  }
-		  else {
-			trace("AdFinished: Ad Play Fail");
-		  }
-		  // updateButtonText(1);
-		}
-		else if (event.code.indexOf("V4VCReward") >= 0)
-		{
-		  //V4VCReward Event is delimited by |
-		  //Order is V4VCReward|success|amount|name
-		  var v4vc_arr:Array = event.code.split("|");
-		  if(v4vc_arr[1] == "true")
-		  {
-			trace("V4VC Success");
-			if (v4vc_arr[3] != cur_v4vc_name)
-			{
-			  resetV4VCCounter();
-			}
-			cur_v4vc_amount += int(v4vc_arr[2]);
-			var ba_v4vc_amount:ByteArray = new ByteArray();
-			ba_v4vc_amount.writeInt(cur_v4vc_amount);
-			EncryptedLocalStore.setItem("v4vc_amount", ba_v4vc_amount);
-			v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
-		  }
-		  else
-		  {
-			trace("V4VC Fail");
-		  }
-		}
-		else if (event.code.indexOf("AdAvailabilityChange") >= 0) {
-		  //AdAvailabilityChange Event is delimited by |
-		  //Order is AdAvailabilityChange|available|zone
-		  var args_arr:Array = event.code.split("|");
-		  var outcome:Boolean = false;
-          if (args_arr[1] == 'true') outcome = true;
-		  updateButtonText(outcome,args_arr[2]);
-		}
-	  }
-	}
+    //AdColony Event Handlers
+    public function handleV4VCEvent(event:AdColonyV4VCRewardEvent):void {
+      if(event.success)
+      {
+        trace("V4VC Success");
+        if (event.name != cur_v4vc_name)
+        {
+          resetV4VCCounter();
+        }
+        cur_v4vc_amount += event.amount;
+        var ba_v4vc_amount:ByteArray = new ByteArray();
+        ba_v4vc_amount.writeInt(cur_v4vc_amount);
+        EncryptedLocalStore.setItem("v4vc_amount", ba_v4vc_amount);
+        v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
+      }
+      else {
+        trace("V4VC Fail");
+      }
+    }
+
+    public function handleAdStart(event:AdColonyAdStartedEvent):void {
+      trace("Ad Start");
+    }
+
+    public function handleAdFinish(event:AdColonyAdFinishedEvent):void {
+      if (event.success) {
+        trace("AdFinished: Ad Play Success");
+      }
+      else {
+        trace("AdFinished: Ad Play Fail");
+      }
+    }
+
+    public function handleAdAvailabilityChange(event:AdColonyAdAvailabilityChangeEvent):void {
+      updateButtonText(event.available, event.zone);
+  	}
 
   }
 }

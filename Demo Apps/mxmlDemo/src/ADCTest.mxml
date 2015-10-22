@@ -44,10 +44,14 @@
               if(AdColony.isSupported())
               {
                 //Attach listener to AdColony extension context
-                AdColony.adcContext.addEventListener(StatusEvent.STATUS, handleAdColonyEvent);
+                AdColony.addEventListener(AdColonyAdStartedEvent.EVENT_TYPE, handleAdStart);
+                AdColony.addEventListener(AdColonyAdFinishedEvent.EVENT_TYPE, handleAdFinish);
+                AdColony.addEventListener(AdColonyV4VCRewardEvent.EVENT_TYPE, handleV4VCEvent);
+                AdColony.addEventListener(AdColonyAdAvailabilityChangeEvent.EVENT_TYPE, handleAdAvailabilityChange);
+
                 //Configure AdColony to use the correct app id and video zones
                 AdColony.configure("1.0",cur_app_id, cur_video_zone, cur_v4vc_zone);
-                AdColony.setCustomID('feh');
+                AdColony.setCustomID('foo');
               }
               else
               {
@@ -67,60 +71,43 @@
               EncryptedLocalStore.setItem("v4vc_amount", ba_amount);
             }
 
-            //AdColony Event Handler
-            public function handleAdColonyEvent(event:StatusEvent):void {
-              if(event.level == "AdColony")
+            //AdColony Event Handlers
+            public function handleV4VCEvent(event:AdColonyV4VCRewardEvent):void {
+              if(event.success)
               {
-                if(event.code == "AdStarted")
+                trace("V4VC Success");
+                if (event.name != cur_v4vc_name)
                 {
-                  trace("Ad start");
+                  resetV4VCCounter();
                 }
-                else if (event.code.indexOf("AdFinished") >= 0)
-                {
-                  //AdFinished Event is delimited by |
-                  //Format is AdFinished|success
-                  var adFinish_arr:Array = event.code.split('|');
-                  //if success is true
-                  if (adFinish_arr[1] == "true") {
-                    trace("AdFinished: Ad Play Success");
-                  }
-                  else {
-                    trace("AdFinished: Ad Play Fail");
-                  }
-                }
-                else if (event.code.indexOf("V4VCReward") >= 0)
-                {
-                  //V4VCReward Event is delimited by |
-                  //Order is V4VCReward|success|amount|name
-                  var v4vc_arr:Array = event.code.split("|");
-                  if(v4vc_arr[1] == "true")
-                  {
-                    trace("V4VC Success");
-                    if (v4vc_arr[3] != cur_v4vc_name)
-                    {
-                      resetV4VCCounter();
-                    }
-                    cur_v4vc_amount += int(v4vc_arr[2]);
-                    var ba_v4vc_amount:ByteArray = new ByteArray();
-                    ba_v4vc_amount.writeInt(cur_v4vc_amount);
-                    EncryptedLocalStore.setItem("v4vc_amount", ba_v4vc_amount);
-                    v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
-                  }
-                  else
-                  {
-                    trace("V4VC Fail");
-                  }
-                }
-                else if (event.code.indexOf("AdAvailabilityChange") >= 0) {
-                  //AdAvailabilityChange Event is delimited by |
-                  //Order is AdAvailabilityChange|available|zone
-                  var args_arr:Array = event.code.split("|");
-                  var outcome:Boolean = false;
-                  if (args_arr[1] == 'true') outcome = true;
-                  updateButtonText(outcome,args_arr[2]);
-                }
+                cur_v4vc_amount += event.amount;
+                var ba_v4vc_amount:ByteArray = new ByteArray();
+                ba_v4vc_amount.writeInt(cur_v4vc_amount);
+                EncryptedLocalStore.setItem("v4vc_amount", ba_v4vc_amount);
+                v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
+              }
+              else {
+                trace("V4VC Fail");
               }
             }
+
+            public function handleAdStart(event:AdColonyAdStartedEvent):void {
+              trace("Ad Start");
+            }
+
+            public function handleAdFinish(event:AdColonyAdFinishedEvent):void {
+              if (event.success) {
+                trace("AdFinished: Ad Play Success");
+              }
+              else {
+                trace("AdFinished: Ad Play Fail");
+              }
+            }
+
+            public function handleAdAvailabilityChange(event:AdColonyAdAvailabilityChangeEvent):void {
+              updateButtonText(event.available, event.zone);
+            }
+
 
             public function updateButtonText(success:Boolean,updated_zone:String):void
             {
@@ -159,11 +146,11 @@
             }
 
             public function playVideo(event:Event):void {
-                AdColony.showVideoAd();
+                AdColony.showVideoAd(cur_video_zone);
             }
 
             public function playV4VC(event:Event):void {
-                AdColony.offerV4VC( true);
+                AdColony.offerV4VC( true, cur_v4vc_zone);
             }
         ]]>
     </fx:Script>
@@ -174,7 +161,6 @@
         <mx:Spacer height="15%" />
         <s:Image id="adcLogo" source="@Embed('res/img/adc.png')" horizontalAlign="center" scaleMode="letterbox" fillMode="scale"/>
         <mx:Spacer height="15%" />
-        <s:Label id="version_label" color="0xFFFFFF" text="ANE Version: 2.0.7.0"/>
         <s:VGroup >
         <s:Button skinClass="buttonSkin" id="videoButton"  label="Play Video - NOT READY" click="playVideo(event);"/>
         </s:VGroup>
