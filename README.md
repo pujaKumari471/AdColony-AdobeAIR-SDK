@@ -4,6 +4,7 @@ Modified: 2015/10/22
 Android SDK Version: 2.3.0    
 iOS SDK Version: 2.6.0    
 Native Extension Version: 2.6.0   
+Adobe AIR Version: 19     
 
 
 To Download:
