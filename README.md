@@ -27,6 +27,11 @@ Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
+Change Log (2017/04/06):
+----------------------------------
+* Update AdColony iOS to 3.1.1.
+* Update AdColony Android to 3.1.2
+
 Change Log (2016/12/05):
 ----------------------------------
 * Update to AdColony iOS 2.6.3.
@@ -113,4 +118,3 @@ Note that U.S. based companies will need to complete the W-9 form and send it to
 Contact Us:
 ----------------------------------
 For more information, please visit AdColony.com. For questions or assistance, please email us at support@adcolony.com.
-

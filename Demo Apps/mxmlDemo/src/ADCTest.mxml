@@ -1,156 +1,135 @@
 <?xml version="1.0"?>
-<s:Application creationComplete="setTimeout(configureAdColony,1500)" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" backgroundColor="0x131313" applicationDPI="160">
+<s:Application
+    creationComplete="setTimeout(configureAdColony,1500)"
+    xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    backgroundColor="0x131313" applicationDPI="160">
 
     <fx:Script>
         <![CDATA[
             import flash.events.Event;
             import mx.controls.Alert;
             import flash.system.Capabilities;
-            import com.jirbo.airadc.*;
-            import flash.utils.ByteArray;
-            import flash.data.EncryptedLocalStore;
+            import com.adcolony.airadc.*;
 
-            public static var AdColony:AirAdColony;
-            private var cur_app_id:String = "";
-            private var cur_video_zone:String = "";
-            private var cur_v4vc_zone:String = "";
-            private var cur_v4vc_name:String;
-            private var cur_v4vc_amount:int;
+            private const IOS_APP_ID: String = "appbdee68ae27024084bb334a";
+            private const IOS_VIDEO_ZONE: String = "vzf8fb4670a60e4a139d01b5";
+            private const IOS_V4VC_ZONE: String = "vzf8e4e97704c4445c87504e";
 
-            private const ios_app_id:String = "appbdee68ae27024084bb334a";
-            private var ios_video_zone:String = "vzf8fb4670a60e4a139d01b5";
-            private var ios_v4vc_zone:String = "vzf8e4e97704c4445c87504e";
+            private const ANDROID_APP_ID: String = "app185a7e71e1714831a49ec7";
+            private const ANDROID_VIDEO_ZONE: String = "vz06e8c32a037749699e7050";
+            private const ANDROID_V4VC_ZONE: String = "vz1fd5a8b2bf6841a0a4b826";
 
-            private var android_app_id:String = "app185a7e71e1714831a49ec7";
-            private var android_video_zone:String = "vz06e8c32a037749699e7050";
-            private var android_v4vc_zone:String = "vz1fd5a8b2bf6841a0a4b826";
+            public static var AdColony: AirAdColony;
+            private var interstitialVideoAd:AdColonyInterstitial;
+            private var interstitialV4vcAd:AdColonyInterstitial;
+            private var currAppId: String;
+            private var currVideoZone: String;
+            private var currV4vcZone: String;
+            private var currRewardName: String;
+            private var currRewardAmount: Number;
 
             public function configureAdColony():void {
-              AdColony = new AirAdColony();
-              if (AdColony.is_iOS) //Check for iOS or Android
-              {
-                cur_app_id = ios_app_id;
-                cur_video_zone = ios_video_zone;
-                cur_v4vc_zone = ios_v4vc_zone;
-              }
-              else
-              {
-                cur_app_id = android_app_id;
-                cur_video_zone = android_video_zone;
-                cur_v4vc_zone = android_v4vc_zone;
-                Alert.buttonHeight = 65;
-                Alert.buttonWidth = 108;
-              }
-              if(AdColony.isSupported())
-              {
-                //Attach listener to AdColony extension context
-                AdColony.addEventListener(AdColonyAdStartedEvent.EVENT_TYPE, handleAdStart);
-                AdColony.addEventListener(AdColonyAdFinishedEvent.EVENT_TYPE, handleAdFinish);
-                AdColony.addEventListener(AdColonyV4VCRewardEvent.EVENT_TYPE, handleV4VCEvent);
-                AdColony.addEventListener(AdColonyAdAvailabilityChangeEvent.EVENT_TYPE, handleAdAvailabilityChange);
+                AdColony = new AirAdColony();
+                if (AdColony.isSupported()) {
+                    AdColony.addEventListener(AdColonyInterstitialEvent.EVENT_TYPE, handleInterstitialEvent);
+                    AdColony.addEventListener(AdColonyRewardEvent.EVENT_TYPE, handleRewardEvent);
 
-                //Configure AdColony to use the correct app id and video zones
-                AdColony.configure("1.0",cur_app_id, cur_video_zone, cur_v4vc_zone);
-                AdColony.setCustomID('foo');
-              }
-              else
-              {
-                Alert.show("This device is not supported and will not receive ads.");
-              }
-            }
-
-            public function resetV4VCCounter():void
-            {
-              cur_v4vc_name = AdColony.getV4VCName(cur_v4vc_zone);
-              var ba_name:ByteArray = new ByteArray();
-              ba_name.writeUTF(cur_v4vc_name);
-              EncryptedLocalStore.setItem("v4vc_name", ba_name);
-              var ba_amount:ByteArray = new ByteArray();
-              cur_v4vc_amount = 0;
-              ba_amount.writeInt(cur_v4vc_amount);
-              EncryptedLocalStore.setItem("v4vc_amount", ba_amount);
+                    if (AdColony.isIos) {
+                        currAppId = IOS_APP_ID;
+                        currVideoZone = IOS_VIDEO_ZONE;
+                        currV4vcZone = IOS_V4VC_ZONE;
+                    } else {
+                        currAppId = ANDROID_APP_ID;
+                        currVideoZone = ANDROID_VIDEO_ZONE;
+                        currV4vcZone = ANDROID_V4VC_ZONE;
+                    }
+                    AdColony.configure(null, currAppId, currVideoZone, currV4vcZone);
+                } else {
+                    trace("AdColony not supported.");
+                }
             }
 
             //AdColony Event Handlers
-            public function handleV4VCEvent(event:AdColonyV4VCRewardEvent):void {
-              if(event.success)
-              {
-                trace("V4VC Success");
-                if (event.name != cur_v4vc_name)
-                {
-                  resetV4VCCounter();
+            public function handleInterstitialEvent(adEvent:AdColonyInterstitialEvent):void {
+                var interstitialAd:AdColonyInterstitial = adEvent.getInterstitialAd();
+                var zone:AdColonyZone = adEvent.getZone();
+
+                var zoneStr:String = "";
+                if (interstitialAd != null) {
+                    zoneStr = interstitialAd.getZoneId();
+                    if (zoneStr == currVideoZone) {
+                        interstitialVideoAd = interstitialAd;
+                    } else if (zoneStr == currV4vcZone) {
+                        interstitialV4vcAd = interstitialAd;
+                    }
+                } else if (zone != null) {
+                    zoneStr = zone.getZoneId();
                 }
-                cur_v4vc_amount += event.amount;
-                var ba_v4vc_amount:ByteArray = new ByteArray();
-                ba_v4vc_amount.writeInt(cur_v4vc_amount);
-                EncryptedLocalStore.setItem("v4vc_amount", ba_v4vc_amount);
-                v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
-              }
-              else {
-                trace("V4VC Fail");
-              }
+
+                if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_CLICK) {
+                    updateButtonText("Clicked", zoneStr);
+                } else if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_CLOSE) {
+                    updateButtonText("Closed", zoneStr);
+                    if (zoneStr == currVideoZone) {
+                        interstitialVideoAd = null;
+                    } else if (zoneStr == currV4vcZone) {
+                        interstitialV4vcAd = null;
+                    }
+                } else if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_EXPIRING) {
+                    updateButtonText("Expiring", zoneStr);
+                } else if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_IAP) {
+                    updateButtonText("on IAP", zoneStr);
+                } else if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_LEFT_APP) {
+                    updateButtonText("Left App", zoneStr);
+                } else if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_OPEN) {
+                    updateButtonText("Opened", zoneStr);
+                } else if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_REQUEST_FILLED) {
+                    updateButtonText("Request Filled", zoneStr);
+                    if (interstitialV4vcAd != null) {
+                        AdColony.showInterstitial(interstitialV4vcAd);
+                    } else if (interstitialVideoAd != null) {
+                        AdColony.showInterstitial(interstitialVideoAd);
+                    } else {
+                        trace("No Ad Fill");
+                    }
+                } else if (adEvent.getInterstitialEventType() == AirAdColonyDefines.INTERSTITIAL_EVENT_ON_REQUEST_NOT_FILLED) {
+                    updateButtonText("Request not Filled", zoneStr);
+                }
             }
 
-            public function handleAdStart(event:AdColonyAdStartedEvent):void {
-              trace("Ad Start");
+            public function handleRewardEvent(rewardEvent:AdColonyRewardEvent):void {
+                var reward:AdColonyReward = rewardEvent.getReward();
+                var newRewardName:String = reward.getRewardName();
+                var newRewardAmount:Number = reward.getRewardAmount();
+                if (currRewardName == null || newRewardName != currRewardName) {
+                    currRewardAmount = 0;
+                    currRewardName = newRewardName;
+                }
+                currRewardAmount += newRewardAmount;
+                v4vcCounterLabel.text = "V4VC Info: " + currRewardAmount + " " + currRewardName;
             }
 
-            public function handleAdFinish(event:AdColonyAdFinishedEvent):void {
-              if (event.success) {
-                trace("AdFinished: Ad Play Success");
-              }
-              else {
-                trace("AdFinished: Ad Play Fail");
-              }
+            public function updateButtonText(adText: String, updated_zone: String):void {
+                if (updated_zone == currVideoZone) {
+                    videoButton.label = "Play Video -- "+ adText;
+
+                } else if (updated_zone == currV4vcZone) {
+                    v4vcButton.label = "Play V4VC -- "+ adText;
+                }
             }
 
-            public function handleAdAvailabilityChange(event:AdColonyAdAvailabilityChangeEvent):void {
-              updateButtonText(event.available, event.zone);
+            private function playVideoAd(event:Event):void {
+                var isSuccess:Boolean = AdColony.requestInterstitial(currVideoZone, null);
+                trace("request video ad result = " + isSuccess);
+                videoButton.label = "Play Video Ad -- Requested";
             }
 
-
-            public function updateButtonText(success:Boolean,updated_zone:String):void
-            {
-              if (updated_zone == cur_video_zone) {
-                if (success) {
-                  videoButton.label = "Play Video - Ready";
-                }
-                else {
-                  videoButton.label = "Play Video - NOT READY";
-                }
-              }
-              else if (updated_zone == cur_v4vc_zone) {
-                if (success) {
-                  v4vcButton.label = "Play V4VC - Ready";
-                var ba_v4vc_name:ByteArray = EncryptedLocalStore.getItem("v4vc_name");
-                if (!ba_v4vc_name)
-                {
-                  resetV4VCCounter();
-                }
-                else
-                {
-                  cur_v4vc_name = ba_v4vc_name.readUTF();
-                  if (cur_v4vc_name != AdColony.getV4VCName(cur_v4vc_zone))
-                  {
-                    resetV4VCCounter();
-                  }
-                  var ba_v4vc_amount:ByteArray = EncryptedLocalStore.getItem("v4vc_amount");
-                  cur_v4vc_amount = ba_v4vc_amount.readInt();
-                }
-                v4vc_counter_label.text = "V4VC Info: " + cur_v4vc_amount + " " + cur_v4vc_name;
-                }
-                else {
-                  v4vcButton.label = "Play V4VC - NOT READY";
-                }
-              }
-            }
-
-            public function playVideo(event:Event):void {
-                AdColony.showVideoAd(cur_video_zone);
-            }
-
-            public function playV4VC(event:Event):void {
-                AdColony.offerV4VC( true, cur_v4vc_zone);
+            private function playV4vcAd(event:Event):void {
+                var isSuccess:Boolean = AdColony.requestInterstitial(currV4vcZone, null);
+                trace("request video ad result = " + isSuccess);
+                v4vcButton.label = "Play Rewarded Ad -- Requested";
             }
         ]]>
     </fx:Script>
@@ -162,12 +141,12 @@
         <s:Image id="adcLogo" source="@Embed('res/img/adc.png')" horizontalAlign="center" scaleMode="letterbox" fillMode="scale"/>
         <mx:Spacer height="15%" />
         <s:VGroup >
-        <s:Button skinClass="buttonSkin" id="videoButton"  label="Play Video - NOT READY" click="playVideo(event);"/>
+        <s:Button skinClass="buttonSkin" id="videoButton"  label="Play Video -- NOT READY" click="playVideoAd(event);"/>
         </s:VGroup>
         <s:VGroup >
-        <s:Button skinClass="buttonSkin" id="v4vcButton"  label="Play V4VC - NOT READY" click="playV4VC(event);"/>
+        <s:Button skinClass="buttonSkin" id="v4vcButton"  label="Play V4VC -- NOT READY" click="playV4vcAd(event);"/>
         </s:VGroup>
-        <s:Label id="v4vc_counter_label" color="0xFFFFFF" text="V4VC Info: Loading..."/>
+        <s:Label id="v4vcCounterLabel" color="0xFFFFFF" text="V4VC Info: Loading..."/>
         </s:VGroup>
 
 </s:Application>
