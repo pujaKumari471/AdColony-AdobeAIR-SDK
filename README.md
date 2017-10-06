@@ -29,8 +29,8 @@ Getting Started with AdColony:
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
 Change Log (2017/10/06):
-* Update AdColony iOS to 3.2.1 [iOS SDK Changelog](https://github.com/AdColony/AdColony-iOS-SDK-3/blob/master/CHANGELOG.md)
-* Update AdColony Android 3.2.1. [Android SDK Changelog](https://github.com/AdColony/AdColony-Android-SDK-3/blob/master/CHANGELOG.md)
+* Update AdColony iOS to 3.2.1 Please see the iOS SDK Changelog [here](https://github.com/AdColony/AdColony-iOS-SDK-3/blob/master/CHANGELOG.md).
+* Update AdColony Android to 3.2.1. Please see the Android SDK Changelog [here](https://github.com/AdColony/AdColony-Android-SDK-3/blob/master/CHANGELOG.md).
 
 Change Log (2017/04/13):
 ----------------------------------
