@@ -1,20 +1,19 @@
 AdColony AIR Native Extension
 ==================================
-Modified: 2017/10/06    
-Android SDK Version: 3.2.1    
-iOS SDK Version: 3.2.1    
-Native Extension Version: 3.2.1 
+Modified: 2018/02/13
+Android SDK Version: 3.3.1
+iOS SDK Version: 3.3.1
+Native Extension Version: 3.3.1
 
 ## Overview
 AdColony delivers zero-buffering, [full-screen Instant-Play™ HD video](https://www.adcolony.com/technology/instant-play/), [interactive Aurora™ Video](https://www.adcolony.com/technology/auroravideo), and Aurora™ Playable ads that can be displayed anywhere within your application. Our advertising SDK is trusted by the world’s top gaming and non-gaming publishers, delivering them the highest monetization opportunities from brand and performance advertisers. AdColony’s SDK can monetize a wide range of ad formats including in-stream/pre-roll, out-stream/interstitial and V4VC™, a secure system for rewarding users of your app with virtual currency upon the completion of video and playable ads.
 
 ## Release Notes
 
-#### Key Features of the SDK 3.2:
-* iOS 11 and Android Oreo compatibility along with several bugs fixes, stabilty and security improvements
-* User experience improvements via enhanced skippability controls and a new mute/unmute feature
-* Post-install events APIs
-* Crash reporting and a new convenient test mode feature
+#### Key Features of the SDK 3.3:
+* Added Integral Ad Science (IAS) for viewability measurement.
+* iPhone X support
+* Several bug fixes, memory usage optimizations, and stability improvements.
 
 
 
@@ -37,6 +36,10 @@ Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
+Change Log (2018/02/13):
+-----------------------------
+* Update AdColony iOS to 3.3.1 Please see the iOS SDK Changelog [here](https://github.com/AdColony/AdColony-iOS-SDK-3/blob/master/CHANGELOG.md).
+* Update AdColony Android to 3.3.1. Please see the Android SDK Changelog [here](https://github.com/AdColony/AdColony-Android-SDK-3/blob/master/CHANGELOG.md).
 
 Change Log (2017/10/06):
 -----------------------------
