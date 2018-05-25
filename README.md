@@ -1,28 +1,36 @@
 AdColony AIR Native Extension
 ==================================
-- Modified: 2018/02/13
-- Android SDK Version: 3.3.1
-- iOS SDK Version: 3.3.1
-- Native Extension Version: 3.3.1
+- Modified: 2018/05/25
+- Android SDK Version: 3.3.4
+- iOS SDK Version: 3.3.4
+- Native Extension Version: 3.3.4
 
-## Overview
-AdColony delivers zero-buffering, [full-screen Instant-Play™ HD video](https://www.adcolony.com/technology/instant-play/), [interactive Aurora™ Video](https://www.adcolony.com/technology/auroravideo), and Aurora™ Playable ads that can be displayed anywhere within your application. Our advertising SDK is trusted by the world’s top gaming and non-gaming publishers, delivering them the highest monetization opportunities from brand and performance advertisers. AdColony’s SDK can monetize a wide range of ad formats including in-stream/pre-roll, out-stream/interstitial and V4VC™, a secure system for rewarding users of your app with virtual currency upon the completion of video and playable ads.
+## Overview AdColony delivers zero-buffering,
+[full-screen Instant-Play™ HD video](https://www.adcolony.com/technology/instant-play/),
+[interactive Aurora™ Video](https://www.adcolony.com/technology/auroravideo),
+and Aurora™ Playable ads that can be displayed anywhere within your
+application. Our advertising SDK is trusted by the world’s top gaming
+and non-gaming publishers, delivering them the highest monetization
+opportunities from brand and performance advertisers. AdColony’s SDK
+can monetize a wide range of ad formats including in-stream/pre-roll,
+out-stream/interstitial and V4VC™, a secure system for rewarding users
+of your app with virtual currency upon the completion of video and
+playable ads.
 
 ## Release Notes
 
-#### Key Features of the SDK 3.3:
-* Added Integral Ad Science (IAS) for viewability measurement.
-* iPhone X support
-* Several bug fixes, memory usage optimizations, and stability improvements.
+#### Key Features of the SDK 3.3.4:
 
-
+* General Data Protection Regulation (GDPR) compliance
+* Several bug fixes, memory usage optimizations, and stability improvements
 
 ## To Download:
-----------------------------------
-The simplest way to obtain the AdColony ANE is to click the "Download ZIP" button located in the right-hand navigation pane of this page.
+
+The simplest way to obtain the AdColony ANE is to click the "Download
+ZIP" button located in the right-hand navigation pane of this page.
 
 #### Contains:
-----------------------------------
+
 * Demo Apps
   * actionscriptDemo
   * mxmlDemo
@@ -31,20 +39,30 @@ The simplest way to obtain the AdColony ANE is to click the "Download ZIP" butto
   * AirAdColony-no-GPS.ane
 * W-9 Form.pdf
 
-
 Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
 
+Change Log (2018/05/25):
+-----------------------------
+* Update AdColony iOS to 3.3.4
+* Update AdColony Android to 3.3.4
+* Added a new API to pass user consent as required for compliance with
+  the European Union's General Data Protection Regulation (GDPR). If
+  you are collecting consent from your users, you can make use of this
+  new API to inform AdColony and all downstream consumers of the
+  consent. Please see our GDPR FAQ for more information and our GDPR
+  wiki for implementation details.
+
 Change Log (2018/02/13):
 -----------------------------
-* Update AdColony iOS to 3.3.1 Please see the iOS SDK Changelog [here](https://github.com/AdColony/AdColony-iOS-SDK-3/blob/master/CHANGELOG.md).
-* Update AdColony Android to 3.3.1. Please see the Android SDK Changelog [here](https://github.com/AdColony/AdColony-Android-SDK-3/blob/master/CHANGELOG.md).
+* Update AdColony iOS to 3.3.1
+* Update AdColony Android to 3.3.1
 
 Change Log (2017/10/06):
 -----------------------------
-* Update AdColony iOS to 3.2.1 Please see the iOS SDK Changelog [here](https://github.com/AdColony/AdColony-iOS-SDK-3/blob/master/CHANGELOG.md).
-* Update AdColony Android to 3.2.1. Please see the Android SDK Changelog [here](https://github.com/AdColony/AdColony-Android-SDK-3/blob/master/CHANGELOG.md).
+* Update AdColony iOS to 3.2.1
+* Update AdColony Android to 3.2.1
 
 Change Log (2017/04/13):
 ----------------------------------
