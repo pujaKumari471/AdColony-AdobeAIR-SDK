@@ -1,9 +1,9 @@
 AdColony AIR Native Extension
 ==================================
-- Modified: 2018/05/25
-- Android SDK Version: 3.3.4
-- iOS SDK Version: 3.3.4
-- Native Extension Version: 3.3.4
+- Modified: 2018/07/27
+- Android SDK Version: 3.3.5
+- iOS SDK Version: 3.3.5
+- Native Extension Version: 3.3.5
 
 ## Overview AdColony delivers zero-buffering,
 [full-screen Instant-Play™ HD video](https://www.adcolony.com/technology/instant-play/),
@@ -16,13 +16,6 @@ can monetize a wide range of ad formats including in-stream/pre-roll,
 out-stream/interstitial and V4VC™, a secure system for rewarding users
 of your app with virtual currency upon the completion of video and
 playable ads.
-
-## Release Notes
-
-#### Key Features of the SDK 3.3.4:
-
-* General Data Protection Regulation (GDPR) compliance
-* Several bug fixes, memory usage optimizations, and stability improvements
 
 ## To Download:
 
@@ -42,6 +35,19 @@ ZIP" button located in the right-hand navigation pane of this page.
 Getting Started with AdColony:
 ----------------------------------
 Users should review the [documentation](https://github.com/AdColony/AdColony-AdobeAIR-SDK/wiki) to get started using our ANE.
+
+## Release Notes
+
+Change Log (2018/07/27):
+-----------------------------
+* Update AdColony iOS to 3.3.5
+* Update AdColony Android to 3.3.5
+* [iOS] Removed requirement for the camera and calendar
+  permissions. However, with these permissions enabled, you may be
+  able to receive higher paying ads.
+* [Android] Fixed RejectedExecutionException in issue
+* Several bug fixes, memory usage optimizations, and stability
+  improvements
 
 Change Log (2018/05/25):
 -----------------------------
